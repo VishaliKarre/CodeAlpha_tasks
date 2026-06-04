@@ -1,0 +1,362 @@
+
+<h2 class="sr-only">Phishing Awareness Training — interactive module covering phishing types, recognition tips, and a quiz</h2>
+
+<style>
+  .pha-root { font-family: var(--font-sans); padding: 1rem 0; }
+  .nav-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .nav-tab { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 8px 18px; font-size: 14px; cursor: pointer; color: var(--color-text-secondary); transition: all 0.15s; }
+  .nav-tab.active { background: var(--color-background-primary); border-color: var(--color-border-primary); color: var(--color-text-primary); font-weight: 500; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .badge { display: inline-block; font-size: 12px; padding: 3px 10px; border-radius: var(--border-radius-md); font-weight: 500; }
+  .badge-danger { background: #FCEBEB; color: #A32D2D; }
+  .badge-warn { background: #FAEEDA; color: #854F0B; }
+  .badge-info { background: #E6F1FB; color: #185FA5; }
+  .badge-ok { background: #EAF3DE; color: #3B6D11; }
+  .email-mock { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; margin-bottom: 1rem; }
+  .email-header { padding: 12px 16px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .email-body { padding: 16px; font-size: 14px; line-height: 1.7; color: var(--color-text-primary); }
+  .email-label { font-size: 12px; color: var(--color-text-secondary); }
+  .red-flag { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; padding: 10px 12px; background: #FCEBEB; border-radius: var(--border-radius-md); border-left: 3px solid #E24B4A; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+  .red-flag i { color: #A32D2D; font-size: 18px; margin-top: 2px; }
+  .red-flag-text { font-size: 13px; color: #501313; line-height: 1.5; }
+  .tip-card { display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); margin-bottom: 8px; }
+  .tip-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .quiz-option { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); margin-bottom: 8px; cursor: pointer; background: var(--color-background-primary); font-size: 14px; color: var(--color-text-primary); transition: all 0.15s; }
+  .quiz-option:hover { background: var(--color-background-secondary); }
+  .quiz-option.correct { background: #EAF3DE; border-color: #639922; color: #27500A; }
+  .quiz-option.wrong { background: #FCEBEB; border-color: #E24B4A; color: #501313; }
+  .quiz-feedback { padding: 12px 16px; border-radius: var(--border-radius-md); margin-top: 12px; font-size: 14px; line-height: 1.6; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: #EAF3DE; color: #173404; }
+  .quiz-feedback.wrong { background: #FCEBEB; color: #501313; }
+  .progress-bar-wrap { background: var(--color-background-secondary); border-radius: 999px; height: 8px; margin-bottom: 4px; }
+  .progress-bar-fill { height: 8px; border-radius: 999px; background: #639922; transition: width 0.4s; }
+  .score-box { text-align: center; padding: 2rem 1rem; }
+  .type-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1rem; }
+  .type-card { padding: 14px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); background: var(--color-background-primary); }
+  h2.sec-title { font-size: 18px; font-weight: 500; margin: 0 0 4px; color: var(--color-text-primary); }
+  .sec-sub { font-size: 14px; color: var(--color-text-secondary); margin-bottom: 1.25rem; }
+  .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.25rem 0; }
+</style>
+
+<div class="pha-root">
+  <div style="margin-bottom:1.5rem;">
+    <div style="font-size:13px; color:var(--color-text-secondary); margin-bottom:4px;">CodeAlpha Internship — Task 2</div>
+    <div style="font-size:22px; font-weight:500; color:var(--color-text-primary);">Phishing Awareness Training</div>
+    <div style="font-size:14px; color:var(--color-text-secondary); margin-top:4px;">Learn to recognize, avoid, and report phishing attacks</div>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('intro')"><i class="ti ti-info-circle" aria-hidden="true"></i> Introduction</button>
+    <button class="nav-tab" onclick="showSection('types')"><i class="ti ti-category" aria-hidden="true"></i> Attack types</button>
+    <button class="nav-tab" onclick="showSection('example')"><i class="ti ti-mail" aria-hidden="true"></i> Real examples</button>
+    <button class="nav-tab" onclick="showSection('tips')"><i class="ti ti-shield-check" aria-hidden="true"></i> Best practices</button>
+    <button class="nav-tab" onclick="showSection('quiz')"><i class="ti ti-clipboard-check" aria-hidden="true"></i> Quiz</button>
+  </div>
+
+  <!-- INTRO -->
+  <div id="sec-intro" class="section active">
+    <h2 class="sec-title">What is phishing?</h2>
+    <p class="sec-sub">A social engineering attack that tricks people into revealing sensitive information.</p>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:1.25rem;">
+      <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:1rem; text-align:center;">
+        <div style="font-size:24px; font-weight:500; color:#A32D2D;">3.4B</div>
+        <div style="font-size:13px; color:var(--color-text-secondary);">phishing emails sent daily</div>
+      </div>
+      <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:1rem; text-align:center;">
+        <div style="font-size:24px; font-weight:500; color:#854F0B;">36%</div>
+        <div style="font-size:13px; color:var(--color-text-secondary);">of breaches involve phishing</div>
+      </div>
+      <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:1rem; text-align:center;">
+        <div style="font-size:24px; font-weight:500; color:#185FA5;">$17,700</div>
+        <div style="font-size:13px; color:var(--color-text-secondary);">lost per minute to phishing</div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-weight:500; font-size:15px; margin-bottom:8px;">How it works</div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; gap:10px; align-items:flex-start; font-size:14px;">
+          <span style="background:#FCEBEB; color:#A32D2D; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-weight:500; flex-shrink:0;">1</span>
+          <span style="color:var(--color-text-primary);">Attacker crafts a convincing fake email, message, or website</span>
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-start; font-size:14px;">
+          <span style="background:#FAEEDA; color:#854F0B; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-weight:500; flex-shrink:0;">2</span>
+          <span style="color:var(--color-text-primary);">Victim is lured with urgency, fear, or tempting offers</span>
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-start; font-size:14px;">
+          <span style="background:#E6F1FB; color:#185FA5; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-weight:500; flex-shrink:0;">3</span>
+          <span style="color:var(--color-text-primary);">Victim clicks a malicious link or downloads malware</span>
+        </div>
+        <div style="display:flex; gap:10px; align-items:flex-start; font-size:14px;">
+          <span style="background:#FCEBEB; color:#A32D2D; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-weight:500; flex-shrink:0;">4</span>
+          <span style="color:var(--color-text-primary);">Attacker steals credentials, money, or data</span>
+        </div>
+      </div>
+    </div>
+    <button class="nav-tab" style="margin-top:8px;" onclick="showSection('types')">Next: Attack types <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+
+  <!-- TYPES -->
+  <div id="sec-types" class="section">
+    <h2 class="sec-title">Types of phishing attacks</h2>
+    <p class="sec-sub">Attackers use many channels — not just email.</p>
+    <div class="type-grid">
+      <div class="type-card">
+        <div style="margin-bottom:8px;"><i class="ti ti-mail" aria-hidden="true" style="font-size:22px; color:#185FA5;"></i></div>
+        <div style="font-weight:500; font-size:14px; margin-bottom:4px;">Email phishing</div>
+        <div style="font-size:13px; color:var(--color-text-secondary);">Mass fake emails impersonating banks, services, or employers.</div>
+        <div style="margin-top:8px;"><span class="badge badge-danger">Most common</span></div>
+      </div>
+      <div class="type-card">
+        <div style="margin-bottom:8px;"><i class="ti ti-target" aria-hidden="true" style="font-size:22px; color:#993C1D;"></i></div>
+        <div style="font-weight:500; font-size:14px; margin-bottom:4px;">Spear phishing</div>
+        <div style="font-size:13px; color:var(--color-text-secondary);">Targeted attack using personal details to seem legitimate.</div>
+        <div style="margin-top:8px;"><span class="badge badge-warn">High success rate</span></div>
+      </div>
+      <div class="type-card">
+        <div style="margin-bottom:8px;"><i class="ti ti-crown" aria-hidden="true" style="font-size:22px; color:#854F0B;"></i></div>
+        <div style="font-weight:500; font-size:14px; margin-bottom:4px;">Whaling</div>
+        <div style="font-size:13px; color:var(--color-text-secondary);">Targets executives (CEOs, CFOs) for large financial fraud.</div>
+        <div style="margin-top:8px;"><span class="badge badge-warn">High value target</span></div>
+      </div>
+      <div class="type-card">
+        <div style="margin-bottom:8px;"><i class="ti ti-device-mobile" aria-hidden="true" style="font-size:22px; color:#533AB7;"></i></div>
+        <div style="font-weight:500; font-size:14px; margin-bottom:4px;">Smishing</div>
+        <div style="font-size:13px; color:var(--color-text-secondary);">Phishing via SMS text messages with fake links.</div>
+        <div style="margin-top:8px;"><span class="badge badge-info">SMS-based</span></div>
+      </div>
+      <div class="type-card">
+        <div style="margin-bottom:8px;"><i class="ti ti-phone" aria-hidden="true" style="font-size:22px; color:#3B6D11;"></i></div>
+        <div style="font-weight:500; font-size:14px; margin-bottom:4px;">Vishing</div>
+        <div style="font-size:13px; color:var(--color-text-secondary);">Voice call scams impersonating banks or IT support.</div>
+        <div style="margin-top:8px;"><span class="badge badge-ok">Voice-based</span></div>
+      </div>
+      <div class="type-card">
+        <div style="margin-bottom:8px;"><i class="ti ti-search" aria-hidden="true" style="font-size:22px; color:#A32D2D;"></i></div>
+        <div style="font-weight:500; font-size:14px; margin-bottom:4px;">Pharming</div>
+        <div style="font-size:13px; color:var(--color-text-secondary);">Redirects users to fake websites via DNS manipulation.</div>
+        <div style="margin-top:8px;"><span class="badge badge-danger">Hard to detect</span></div>
+      </div>
+    </div>
+    <button class="nav-tab" style="margin-top:8px;" onclick="showSection('example')">Next: Real examples <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+
+  <!-- EXAMPLES -->
+  <div id="sec-example" class="section">
+    <h2 class="sec-title">Spot the red flags</h2>
+    <p class="sec-sub">Here is a real-world phishing email example. Can you spot what's wrong?</p>
+    <div class="email-mock">
+      <div class="email-header">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div>
+            <div class="email-label">From</div>
+            <div style="font-size:14px; font-weight:500; color:#A32D2D;">security-alert@paypa1.support-center.com</div>
+          </div>
+          <span class="badge badge-danger"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Suspicious</span>
+        </div>
+        <hr class="divider" style="margin:8px 0;">
+        <div class="email-label">Subject</div>
+        <div style="font-size:14px; font-weight:500;">⚠️ URGENT: Your account has been compromised — verify NOW</div>
+      </div>
+      <div class="email-body">
+        <p>Dear Valued Customer,</p>
+        <p>We have detected <strong>unusual login activity</strong> on your PayPal account. Your account will be <strong>permanently suspended within 24 hours</strong> unless you verify your identity immediately.</p>
+        <p>Click the link below to restore access:</p>
+        <p style="color:#185FA5; text-decoration:underline; cursor:pointer;">http://paypal-secure-verify.xyz/login?token=829xA</p>
+        <p>Failure to verify will result in account termination and loss of funds.</p>
+        <p>PayPal Security Team</p>
+      </div>
+    </div>
+    <div style="font-weight:500; font-size:15px; margin-bottom:10px;"><i class="ti ti-flag" aria-hidden="true" style="color:#A32D2D;"></i> Red flags in this email</div>
+    <div class="red-flag"><i class="ti ti-alert-triangle" aria-hidden="true"></i><div class="red-flag-text"><strong>Fake sender domain</strong> — "paypa<u>1</u>.support-center.com" uses a "1" instead of "l" and is not PayPal's real domain (paypal.com).</div></div>
+    <div class="red-flag"><i class="ti ti-clock" aria-hidden="true"></i><div class="red-flag-text"><strong>Urgency and fear tactics</strong> — "24 hours", "permanently suspended", "loss of funds" — designed to panic you into acting fast without thinking.</div></div>
+    <div class="red-flag"><i class="ti ti-link" aria-hidden="true"></i><div class="red-flag-text"><strong>Suspicious URL</strong> — "paypal-secure-verify.xyz" is not PayPal's website. Attackers use similar-looking domains to fool victims.</div></div>
+    <div class="red-flag"><i class="ti ti-user-question" aria-hidden="true"></i><div class="red-flag-text"><strong>Generic greeting</strong> — "Dear Valued Customer" instead of your real name. Legitimate companies personalize emails.</div></div>
+    <div class="red-flag"><i class="ti ti-writing" aria-hidden="true"></i><div class="red-flag-text"><strong>Threatening language</strong> — Threats of account termination or fund loss are classic scare tactics. Legit companies don't threaten customers this way.</div></div>
+    <button class="nav-tab" style="margin-top:8px;" onclick="showSection('tips')">Next: Best practices <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+
+  <!-- TIPS -->
+  <div id="sec-tips" class="section">
+    <h2 class="sec-title">Best practices to stay safe</h2>
+    <p class="sec-sub">Follow these to protect yourself and your organization.</p>
+    <div class="tip-card">
+      <div class="tip-icon" style="background:#E6F1FB;"><i class="ti ti-link" aria-hidden="true" style="color:#185FA5; font-size:18px;"></i></div>
+      <div><div style="font-weight:500; font-size:14px; margin-bottom:2px;">Hover before you click</div><div style="font-size:13px; color:var(--color-text-secondary);">Always hover over links to preview the real URL. If it doesn't match the sender's domain, do not click.</div></div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon" style="background:#EAF3DE;"><i class="ti ti-shield-lock" aria-hidden="true" style="color:#3B6D11; font-size:18px;"></i></div>
+      <div><div style="font-weight:500; font-size:14px; margin-bottom:2px;">Enable multi-factor authentication (MFA)</div><div style="font-size:13px; color:var(--color-text-secondary);">Even if credentials are stolen, MFA prevents attackers from logging in without the second factor.</div></div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon" style="background:#FAEEDA;"><i class="ti ti-mail-check" aria-hidden="true" style="color:#854F0B; font-size:18px;"></i></div>
+      <div><div style="font-weight:500; font-size:14px; margin-bottom:2px;">Verify requests through official channels</div><div style="font-size:13px; color:var(--color-text-secondary);">If your bank or colleague requests something urgent, call them directly using a known number — not the one in the email.</div></div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon" style="background:#FCEBEB;"><i class="ti ti-download-off" aria-hidden="true" style="color:#A32D2D; font-size:18px;"></i></div>
+      <div><div style="font-weight:500; font-size:14px; margin-bottom:2px;">Never download unexpected attachments</div><div style="font-size:13px; color:var(--color-text-secondary);">Malware is often disguised as invoices, delivery notices, or office documents. Scan all attachments before opening.</div></div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon" style="background:#EEEDFE;"><i class="ti ti-lock" aria-hidden="true" style="color:#534AB7; font-size:18px;"></i></div>
+      <div><div style="font-weight:500; font-size:14px; margin-bottom:2px;">Check for HTTPS — but don't stop there</div><div style="font-size:13px; color:var(--color-text-secondary);">HTTPS shows encryption, but phishing sites use HTTPS too. Always verify the full domain name carefully.</div></div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon" style="background:#EAF3DE;"><i class="ti ti-flag" aria-hidden="true" style="color:#3B6D11; font-size:18px;"></i></div>
+      <div><div style="font-weight:500; font-size:14px; margin-bottom:2px;">Report suspicious emails</div><div style="font-size:13px; color:var(--color-text-secondary);">Use your email client's "Report Phishing" button. In organizations, report to your IT/security team immediately.</div></div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon" style="background:#FAEEDA;"><i class="ti ti-refresh" aria-hidden="true" style="color:#854F0B; font-size:18px;"></i></div>
+      <div><div style="font-weight:500; font-size:14px; margin-bottom:2px;">Keep software updated</div><div style="font-size:13px; color:var(--color-text-secondary);">Security patches fix vulnerabilities that phishing attacks exploit. Enable automatic updates on all devices.</div></div>
+    </div>
+    <button class="nav-tab" style="margin-top:8px;" onclick="showSection('quiz')">Next: Take the quiz <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="sec-quiz" class="section">
+    <h2 class="sec-title">Test your knowledge</h2>
+    <p class="sec-sub">5 questions — see how much you've learned.</p>
+    <div id="quiz-area"></div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "You receive an email from 'support@amaz0n-helpdesk.net' asking you to verify your account. What should you do?",
+    options: [
+      "Click the link and log in to verify",
+      "Reply with your account details",
+      "Delete the email and go directly to amazon.com in your browser",
+      "Forward it to friends to warn them"
+    ],
+    correct: 2,
+    explanation: "Always go directly to the official website by typing the URL yourself. The sender domain 'amaz0n-helpdesk.net' is not Amazon's real domain (amazon.com) — the '0' instead of 'o' is a classic typosquatting trick."
+  },
+  {
+    q: "Which of the following is the BEST indicator that an email might be phishing?",
+    options: [
+      "The email has a company logo",
+      "The email creates urgency and asks you to act immediately",
+      "The email is written in English",
+      "The email has your name in the greeting"
+    ],
+    correct: 1,
+    explanation: "Urgency and pressure tactics (act now, account suspended, 24 hours) are the #1 phishing red flag. Attackers use them to prevent you from thinking clearly. A logo or name can be easily faked."
+  },
+  {
+    q: "What is 'spear phishing'?",
+    options: [
+      "Phishing via SMS messages",
+      "Mass phishing emails sent to millions",
+      "A targeted attack using personal information about the victim",
+      "Phishing over phone calls"
+    ],
+    correct: 2,
+    explanation: "Spear phishing is a highly targeted attack where the attacker researches their victim and crafts personalized messages (using name, job title, colleagues' names) to seem legitimate. It has a much higher success rate than generic phishing."
+  },
+  {
+    q: "A website has 'https://' and a padlock icon. Does this mean it is safe?",
+    options: [
+      "Yes, HTTPS means it is completely safe",
+      "No, phishing sites can also use HTTPS and look secure",
+      "Yes, only banks use HTTPS",
+      "No, only HTTP sites are safe"
+    ],
+    correct: 1,
+    explanation: "HTTPS only means the connection is encrypted — it does NOT guarantee the site is legitimate. Phishing sites routinely use HTTPS and display padlock icons. Always verify the full domain name carefully."
+  },
+  {
+    q: "You receive an unexpected email with an invoice PDF attached from an unknown sender. What is the safest action?",
+    options: [
+      "Open the PDF — it's probably fine",
+      "Download and scan with antivirus, then open",
+      "Do not open it; report to IT security and delete",
+      "Forward it to a colleague to check"
+    ],
+    correct: 2,
+    explanation: "Never open unexpected attachments from unknown senders. Malware is commonly disguised as invoices, receipts, or delivery notices. Report it to your IT/security team and delete without opening."
+  }
+];
+
+let current = 0, score = 0, answered = [];
+
+function renderQuiz() {
+  const area = document.getElementById('quiz-area');
+  if (current >= questions.length) {
+    const pct = Math.round((score / questions.length) * 100);
+    let msg, color;
+    if (pct >= 80) { msg = "Excellent! You have strong phishing awareness."; color = "#3B6D11"; }
+    else if (pct >= 60) { msg = "Good effort! Review the missed questions for a stronger foundation."; color = "#854F0B"; }
+    else { msg = "Keep learning! Go back through the sections to strengthen your awareness."; color = "#A32D2D"; }
+    area.innerHTML = `<div class="score-box">
+      <div style="font-size:48px; font-weight:500; color:${color};">${pct}%</div>
+      <div style="font-size:16px; color:var(--color-text-secondary); margin:8px 0;">${score} out of ${questions.length} correct</div>
+      <div style="font-size:14px; color:var(--color-text-primary); margin-bottom:1.5rem;">${msg}</div>
+      <button class="nav-tab" onclick="restartQuiz()"><i class="ti ti-refresh" aria-hidden="true"></i> Retake quiz</button>
+    </div>`;
+    return;
+  }
+  const q = questions[current];
+  const progressPct = Math.round((current / questions.length) * 100);
+  area.innerHTML = `
+    <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--color-text-secondary); margin-bottom:4px;">
+      <span>Question ${current + 1} of ${questions.length}</span>
+      <span>Score: ${score}</span>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${progressPct}%"></div></div>
+    <div style="margin:1rem 0; font-size:15px; font-weight:500; color:var(--color-text-primary); line-height:1.6;">${q.q}</div>
+    <div id="options">
+      ${q.options.map((opt, i) => `<button class="quiz-option" id="opt-${i}" onclick="selectAnswer(${i})">${String.fromCharCode(65+i)}. ${opt}</button>`).join('')}
+    </div>
+    <div class="quiz-feedback" id="feedback"></div>
+    <div id="next-btn" style="display:none; margin-top:12px;">
+      <button class="nav-tab" onclick="nextQuestion()">${current < questions.length - 1 ? 'Next question' : 'See results'} <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+    </div>
+  `;
+}
+
+function selectAnswer(idx) {
+  if (answered.includes(current)) return;
+  answered.push(current);
+  const q = questions[current];
+  const opts = document.querySelectorAll('.quiz-option');
+  opts.forEach((btn, i) => {
+    btn.style.cursor = 'default';
+    if (i === q.correct) btn.classList.add('correct');
+    else if (i === idx && idx !== q.correct) btn.classList.add('wrong');
+  });
+  const fb = document.getElementById('feedback');
+  if (idx === q.correct) {
+    score++;
+    fb.className = 'quiz-feedback show correct';
+    fb.innerHTML = '<i class="ti ti-circle-check" aria-hidden="true"></i> <strong>Correct!</strong> ' + q.explanation;
+  } else {
+    fb.className = 'quiz-feedback show wrong';
+    fb.innerHTML = '<i class="ti ti-circle-x" aria-hidden="true"></i> <strong>Incorrect.</strong> ' + q.explanation;
+  }
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+function nextQuestion() {
+  current++;
+  renderQuiz();
+}
+
+function restartQuiz() {
+  current = 0; score = 0; answered = [];
+  renderQuiz();
+}
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  const tabs = ['intro','types','example','tips','quiz'];
+  document.querySelectorAll('.nav-tab')[tabs.indexOf(id)].classList.add('active');
+  if (id === 'quiz') renderQuiz();
+}
+
+renderQuiz();
+</script>
